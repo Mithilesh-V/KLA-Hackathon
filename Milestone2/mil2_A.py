@@ -6,7 +6,7 @@ import logging
 import pandas as pd
 compare_val = dict()
 
-LOG_FILENAME = 'logging_example12.txt'
+LOG_FILENAME = 'logging_example121.txt'
 Format = "%(asctime)s.%(msecs)06d;%(message)s"
 logging.basicConfig(
     format=Format,
@@ -28,15 +28,23 @@ def timefunc_cond(dicti,initial_str):
                 logging.info(initial_str+" "+"Executing"+" "+dicti['Function']+" "+"("+str(dicti['Inputs']['FunctionInput'])+', '+str(dicti['Inputs']['ExecutionTime'])+")")
                 k = dicti['Inputs']['ExecutionTime']
                 time.sleep(int(k))
-                logging.info(initial_str+" "+"Exit")
+            else:
+               logging.info(initial_str+ " "+"Skipped")
+    
+
         elif traverse[1] =='<':
+            print('yes-final')
             if compare_val[traverse[0][2:len(traverse[0])-1]] <int(traverse[2]):
                 logging.info(initial_str+" "+"Executing"+" "+dicti['Function']+" "+"("+str(dicti['Inputs']['FunctionInput'])+', '+str(dicti['Inputs']['ExecutionTime'])+")")
                 k = dicti['Inputs']['ExecutionTime']
                 time.sleep(int(k))
-                logging.info(initial_str+" "+"Exit")
+            else:
+                logging.info(initial_str+ " "+"Skipped")
 
-        
+    else:
+        logging.info(initial_str+ " "+"Skipped")
+
+    logging.info(initial_str+" "+"Exit")    
 
 
 def timefunc(input_val):
@@ -57,12 +65,13 @@ def loader_cond(input,condi,outputs,string,initial_str,dicti):
                 new_string = string+'NoOfDefects'
                 compare_val[new_string] = defects
                 print(compare_val)
-                logging.info(initial_str+" "+"Exit")
+            else:
+                logging.info(initial_str+ " "+"Skipped")
         
         elif traverse[1] =='<':
             print("Yes")
-            logging.info(initial_str+" "+"Executing"+" "+dicti['Function']+" "+"("+str(dicti['Inputs']['Filename'])+")")
             if compare_val[traverse[0][2:len(traverse[0])-1]] <int(traverse[2]):
+                logging.info(initial_str+" "+"Executing"+" "+dicti['Function']+" "+"("+str(dicti['Inputs']['Filename'])+")")
                 data_table = pd.read_csv(input['Filename'])
                 k = data_table.shape
                 defects = k[0]
@@ -70,7 +79,11 @@ def loader_cond(input,condi,outputs,string,initial_str,dicti):
                 new_string = string+'NoOfDefects'
                 compare_val[new_string] = defects
                 print(compare_val)
-                logging.info(initial_str+" "+"Exit")
+            else:
+                logging.info(initial_str+" "+"Skipped")
+    else:
+        logging.info(initial_str+" "+"Skipped")
+    logging.info(initial_str+" "+"Exit")
 
 
 def loader(input,outputs,strings):
@@ -121,8 +134,6 @@ def func(dict_obj,initial_string):
             arr = []
             for i in m:
                 arr.append(dict_obj['Activities'][i])
-            #print(arr)
-            #print(s)
             join_arr=[]
             logging.info(initial_string+" "+"Entry")
             for i in range(len(arr)):
